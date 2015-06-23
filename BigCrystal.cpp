@@ -61,15 +61,15 @@ uint8_t BigCrystal::writeBig(char c, uint8_t col, uint8_t row) {
   int tableOffset = (width * 2) * index;
 
   // Write first row
-  setCursor(col, row);
+  _display->setCursor(col, row);
   for (uint8_t i = 0; i < width; i++) {
-    write(pgm_read_byte_near(table + tableOffset + i));
+    _display->write(pgm_read_byte_near(table + tableOffset + i));
   }
 
   // Write second row
-  setCursor(col, row + 1);
+  _display->setCursor(col, row + 1);
   for (uint8_t i = 0; i < width; i++) {
-    write(pgm_read_byte_near(table + tableOffset + width + i));
+    _display->write(pgm_read_byte_near(table + tableOffset + width + i));
   }
 
   // Clear last column
@@ -133,8 +133,16 @@ char BigCrystal::toUpperCase(char c) {
 }
 
 void BigCrystal::clearColumn(uint8_t col, uint8_t row) {
-  setCursor(col, row);
-  write(0x20);
-  setCursor(col, row + 1);
-  write(0x20);
+  _display->setCursor(col, row);
+  _display->write(0x20);
+  _display->setCursor(col, row + 1);
+  _display->write(0x20);
+}
+
+inline size_t BigCrystal::write(uint8_t value) {
+  int w;
+  w = writeBig(value, _col, _row);
+  // Serial.println(w);
+  _col += w;
+  return 1; // assume sucess
 }
