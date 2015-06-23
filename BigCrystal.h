@@ -77,8 +77,8 @@ public:
   inline void begin(uint8_t cols, uint8_t rows, uint8_t charsize = LCD_5x8DOTS) {
     _display->begin(cols, rows, charsize);
   }
-  inline void clear() { _display->clear(); }
-  inline void home() { _display->home(); }
+  inline void clear() { _display->clear(); _col=0; _row=0;}
+  inline void home() { _display->home(); ;_col=0; _row=0;}
   inline void noDisplay() { _display->noDisplay(); }
   inline void display() { _display->display(); }
   inline void noBlink() { _display->noBlink(); }
@@ -92,11 +92,14 @@ public:
   inline void autoscroll() { _display->autoscroll(); }
   inline void noAutoscroll() { _display->noAutoscroll(); }
   inline void createChar(uint8_t location, uint8_t charmap[]) { _display->createChar(location, charmap); }
-  inline void setCursor(uint8_t col, uint8_t row) { _display->setCursor(col, row); }
-  inline virtual size_t write(uint8_t value) { _display->write(value); }
+  inline void setCursor(uint8_t col, uint8_t row) { _display->setCursor(col, row); _col=col; _row=row;}
+//  inline virtual size_t write(uint8_t value) { _display->write(value); }
+  virtual size_t write(uint8_t);
 
   using Print::write;
 private:
+  int _col;
+  int _row;
   void createCustomChars();
   uint8_t getWidthFromTableCode(uint8_t tableCode);
   const uint8_t* getTable(uint8_t tableCode);
